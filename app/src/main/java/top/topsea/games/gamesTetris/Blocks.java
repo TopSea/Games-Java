@@ -1,46 +1,94 @@
 package top.topsea.games.gamesTetris;
 
-public enum Blocks {
-    Square(0, 7, 0, 8, 1, 7, 1, 8, 1),
-    T(0, 6, 0, 7, 0, 8, 1, 7, 2),
-    I(0, 5, 0, 6, 0, 7, 0, 8, 3),
-    S(0, 7, 0, 8, 1, 6, 1, 7, 4),
-    J(0, 7, 1, 7, 2, 6, 2, 7, 5),
-    Z(0, 6, 0, 7, 1, 7, 1, 8, 6),
-    L(0, 7, 1, 7, 2, 7, 2, 8, 7);
+public class Blocks {
 
+    public int colorCode;
     public int x1, y1;
     public int x2, y2;
     public int x3, y3;
     public int x4, y4;
-    public int color;
+    private Blocks piece;
 
-    Blocks(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int color) {
-        this.x1= x1; this.x2=x2;
-        this.x3= x3; this.x4=x4;
-        this.y1= y1; this.y2=y2;
-        this.y3= y3; this.y4=y4;
-        this.color = color;
+  /*
+  creates a copy Instances of Piece
+   */
+
+    public Blocks(Blocks piece) {
+        this.piece = piece;
+        this.x1= piece.x1; this.x2= piece.x2;
+        this.x3= piece.x3; this.x4= piece.x4;
+        this.y1= piece.y1; this.y2= piece.y2;
+        this.y3= piece.y3; this.y4= piece.y4;
     }
 
-    public static Blocks getBlocks(int b){
-        switch (b){
+  /*
+  creates a Piece depending on colorCode
+   */
+
+    public Blocks(int f) {
+        switch (f) { // Square
             case 1:
-                return Square;
-            case 2:
-                return T;
-            case 3:
-                return I;
-            case 4:
-                return S;
-            case 5:
-                return J;
-            case 6:
-                return L;
-            case 7:
-                return Z;
-            default:
-                return Square;
+                x1 = 0; y1 = 7;
+                x2 = 0; y2 = 8;
+                x3 = 1; y3 = 7;
+                x4 = 1; y4 = 8;
+
+                colorCode = 1;
+                break;
+
+            case 2:    // z Piece
+                x1 = 0;y1 = 7;
+                x2 = 0;y2 = 8;
+                x3 = 1;y3 = 8;
+                x4 = 1;y4 = 9;
+
+                colorCode = 2;
+                break;
+
+            case 3: // I Piece
+                x1 = 0;y1 = 6;
+                x2 = 0;y2 = 7;
+                x3 = 0;y3 = 8;
+                x4 = 0;y4 = 9;
+
+                colorCode = 3;
+                break;
+
+            case 4: // T Piece
+                x1 = 0;y1 = 8;
+                x2 = 1;y2 = 7;
+                x3 = 1;y3 = 8;
+                x4 = 1;y4 = 9;
+
+                colorCode = 4;
+                break;
+
+            case 5: // S Piece
+                x1 = 0;y1 = 7;
+                x2 = 0;y2 = 8;
+                x3 = 1;y3 = 6;
+                x4 = 1;y4 = 7;
+
+                colorCode = 5;
+                break;
+
+            case 6:  // J Piece
+                x1 = 0;y1 = 7;
+                x2 = 0;y2 = 8;
+                x3 = 0;y3 = 9;
+                x4 = 1;y4 = 9;
+
+                colorCode = 6;
+                break;
+
+            case 7:  //  L Piece
+                x1 = 0;y1 = 7;
+                x2 = 0;y2 = 8;
+                x3 = 0;y3 = 9;
+                x4 = 1;y4 = 7;
+
+                colorCode = 7;
+                break;
         }
     }
 
@@ -55,7 +103,10 @@ public enum Blocks {
         y4 = y4 + y;
     }
 
-    public void turnBlock() {
+    /*
+    turns piece around x1|y1 coordinates
+     */
+    public void turnPiece() {
         int tmp_x1, tmp_y1;
         int tmp_x2, tmp_y2;
         int tmp_x3, tmp_y3;
@@ -87,5 +138,4 @@ public enum Blocks {
     public int getMinXCoordinate(int x1, int x2, int x3, int x4) {
         return Math.min(Math.min(x1,x2),Math.min(x3,x4));
     }
-
 }

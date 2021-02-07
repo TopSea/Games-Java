@@ -30,8 +30,8 @@ public class TetrisView extends View {
     private ImageButton leftButton;
     private Timer timer = new Timer();
     private Random random = new Random();
-    private ArrayList<Piece> pieceList;
-    private NextPieceView nextPieceView;
+    private ArrayList<Blocks> pieceList;
+    private NextBlockView nextPieceView;
     private TextView currentLevelTextView;
     private TextView highscoreLevelTextView;
     private TextView currentPunkteTextView;
@@ -41,7 +41,7 @@ public class TetrisView extends View {
     private int level = 0;
     private boolean pause;
 
-    public TetrisView(Context context, NextPieceView nextPieceView, GameBoard gameBoard) {
+    public TetrisView(Context context, NextBlockView nextPieceView, ArrayTetris gameBoard) {
         super(context);
 
         this.mainActivity = (MainActivity) context;

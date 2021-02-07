@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Games</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="home_button_2048">2048</string>
+    <string name="home_button_tetris">俄罗斯方块</string>
+    <string name="home_button_road">数字华容道</string>
+
+    <string name="score" />
+    <string name="best_score"/>
+
+    <string name="button_regame">重新开始</string>
+    <string name="button_save">保存数据</string>
+
+    <string name="next_tetris_block">下一个：</string>
+    <string name="string_road_best">最佳纪录：</string>
+</resources>

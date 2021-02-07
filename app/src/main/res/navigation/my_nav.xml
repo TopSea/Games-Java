@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="top.topsea.games.fragment.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_main2048Fragment"
+            app:destination="@id/main2048Fragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_fragment2048"
+            app:destination="@id/fragment2048" />
+        <action
+            android:id="@+id/action_homeFragment_to_roadFragment"
+            app:destination="@id/roadFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/main2048Fragment"
+        android:name="top.topsea.games.fragment.Main2048Fragment"
+        android:label="fragment_main2048"
+        tools:layout="@layout/fragment_2048" />
+    <fragment
+        android:id="@+id/fragment2048"
+        android:name="top.topsea.games.fragment.MainTetrisFragment"
+        android:label="fragment2048"
+        tools:layout="@layout/fragment_tetris" />
+    <fragment
+        android:id="@+id/roadFragment"
+        android:name="top.topsea.games.fragment.RoadFragment"
+        android:label="RoadFragment" />
+</navigation>

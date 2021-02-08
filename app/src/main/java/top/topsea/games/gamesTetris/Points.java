@@ -3,6 +3,8 @@ package top.topsea.games.gamesTetris;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import top.topsea.games.MainActivity;
+
 public class Points {
 
 private int currentPoints =0;

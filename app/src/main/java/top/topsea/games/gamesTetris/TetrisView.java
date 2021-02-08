@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -17,7 +20,6 @@ import java.util.TimerTask;
 
 import top.topsea.games.MainActivity;
 
-import static top.topsea.games.gamesTetris.Blocks.getBlocks;
 
 public class TetrisView extends View {
 
@@ -41,34 +43,43 @@ public class TetrisView extends View {
     private int level = 0;
     private boolean pause;
 
-    public TetrisView(Context context, NextBlockView nextPieceView, ArrayTetris gameBoard) {
+    public TetrisView(Context context) {
         super(context);
-
         this.mainActivity = (MainActivity) context;
-        this.nextPieceView = nextPieceView;
-        this.gameBoard = gameBoard;
-        pause = mainActivity.getPause();
+        this.gameBoard = ArrayTetris.getArrayTetris();
+        this.nextPieceView = new NextBlockView(context, gameBoard);
         pieceList = gameBoard.getPieceList();
-        mediaPlayer = mainActivity.getMediaPlayer();
         points = new Points(context);
+        gameLoop();
+    }
 
-        currentLevelTextView = mainActivity.getCurrentLevelTextView();
-        highscoreLevelTextView = mainActivity.getHighscoreLevelTextView();
-        currentPunkteTextView = mainActivity.getPointTextView();
+    public TetrisView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        this.mainActivity = (MainActivity) context;
+        this.gameBoard = ArrayTetris.getArrayTetris();
+        this.nextPieceView = new NextBlockView(context, gameBoard);
+        pieceList = gameBoard.getPieceList();
+        points = new Points(context);
+        gameLoop();
+    }
 
-        currentLevelTextView.append("0");
-        currentPunkteTextView.append("0");
-        highscoreLevelTextView.append("" + points.loadHighscore());
+    public TetrisView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.mainActivity = (MainActivity) context;
+        this.gameBoard = ArrayTetris.getArrayTetris();
+        this.nextPieceView = new NextBlockView(context, gameBoard);
+        pieceList = gameBoard.getPieceList();
+        points = new Points(context);
+        gameLoop();
+    }
 
-        rotateButton = mainActivity.getRotateButton();
-        rightButton = mainActivity.getRightButton();
-        downButton = mainActivity.getDownButton();
-        leftButton = mainActivity.getLeftButton();
-
-        rotateButton.setOnClickListener(this);
-        rightButton.setOnClickListener(this);
-        downButton.setOnClickListener(this);
-        leftButton.setOnClickListener(this);
+    public TetrisView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        this.mainActivity = (MainActivity) context;
+        this.gameBoard = ArrayTetris.getArrayTetris();
+        this.nextPieceView = new NextBlockView(context, gameBoard);
+        pieceList = gameBoard.getPieceList();
+        points = new Points(context);
         gameLoop();
     }
 
@@ -84,7 +95,7 @@ public class TetrisView extends View {
                     @Override
                     public void run() {
 
-                        if (!gameOver() && !mainActivity.getPause()) {
+                        if (!gameOver()/* && !mainActivity.getPause()*/) {
 
                             gameBoard.moveDown(gameBoard.getCurrentPiece());
 
@@ -92,7 +103,7 @@ public class TetrisView extends View {
                                 int deletedRows = gameBoard.clearRows();
                                 gameBoard.clearRows();
                                 pieceList.remove(gameBoard.getCurrentPiece());
-                                pieceList.add(new Piece(random.nextInt(7) + 1));
+                                pieceList.add(new Blocks(random.nextInt(7) + 1));
                                 nextPieceView.invalidate();
 
                                 if (deletedRows > 0) {
@@ -131,9 +142,9 @@ public class TetrisView extends View {
             timer.cancel();
             pieceList.clear();
             gameBoard.clearGameBoard();
-            mainActivity.setPause(true);
+//            mainActivity.setPause(true);
             mediaPlayer.stop();
-            showGameOverScreen();
+//            showGameOverScreen();
             return true;
         }
         return false;
@@ -143,17 +154,17 @@ public class TetrisView extends View {
         timer.cancel();
         pieceList.clear();
         gameBoard.clearGameBoard();
-        mainActivity.setPause(true);
+//        mainActivity.setPause(true);
         mediaPlayer.stop();
         invalidate();
         Intent intent = new Intent(this.getContext(), MainActivity.class);
         getContext().startActivity(intent);
     }
 
-    public void showGameOverScreen() {
-        Intent intent = new Intent(this.getContext(), GameOverScreen.class);
-        getContext().startActivity(intent);
-    }
+//    public void showGameOverScreen() {
+//        Intent intent = new Intent(this.getContext(), GameOverScreen.class);
+//        getContext().startActivity(intent);
+//    }
 
     /*
     change colorCode to spezific Color and paint on GAmeboard
@@ -177,30 +188,30 @@ public class TetrisView extends View {
     control falling pieces with buttons
      */
 
-    @Override
-    public void onClick(View v) {
-        if (!mainActivity.getPause()) {
-
-            switch (v.getId()) {
-                case R.id.rightButton:
-                    gameBoard.moveRight(gameBoard.getCurrentPiece());
-                    invalidate();
-                    break;
-                case R.id.downButton:
-                    gameBoard.fastDrop(gameBoard.getCurrentPiece());
-                    invalidate();
-                    break;
-                case R.id.leftButton:
-                    gameBoard.moveLeft(gameBoard.getCurrentPiece());
-                    invalidate();
-                    break;
-                case R.id.rotateButton:
-                    gameBoard.rotatePiece(gameBoard.getCurrentPiece());
-                    invalidate();
-                    break;
-            }
-        }
-    }
+//    @Override
+//    public void onClick(View v) {
+//        if (!mainActivity.getPause()) {
+//
+//            switch (v.getId()) {
+//                case R.id.rightButton:
+//                    gameBoard.moveRight(gameBoard.getCurrentPiece());
+//                    invalidate();
+//                    break;
+//                case R.id.downButton:
+//                    gameBoard.fastDrop(gameBoard.getCurrentPiece());
+//                    invalidate();
+//                    break;
+//                case R.id.leftButton:
+//                    gameBoard.moveLeft(gameBoard.getCurrentPiece());
+//                    invalidate();
+//                    break;
+//                case R.id.rotateButton:
+//                    gameBoard.rotatePiece(gameBoard.getCurrentPiece());
+//                    invalidate();
+//                    break;
+//            }
+//        }
+//    }
 
     public Timer getTimer() {
         return this.timer;

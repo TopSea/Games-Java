@@ -13,13 +13,23 @@ public class ArrayTetris {
     private final int boardHeight = 30;
     private final int boardWidth = 16;
     private int gameBoard[][] = new int[boardHeight][boardWidth];
-    private final Random random = new Random();
-    private ArrayList<Blocks> pieceList = new ArrayList<Blocks>();
-    private final int number_of_Pieces = 7;
+    private static final Random random = new Random();
+    private static ArrayList<Blocks> pieceList = new ArrayList<Blocks>();
+    private static final int number_of_Pieces = 7;
+    private static ArrayTetris arrayTetris;
 
-    public ArrayTetris() {
+    private ArrayTetris() {
         pieceList.add(new Blocks(random.nextInt(number_of_Pieces) + 1));
         pieceList.add(new Blocks(random.nextInt(number_of_Pieces) + 1));
+    }
+
+    public static synchronized ArrayTetris getArrayTetris(){
+        if (arrayTetris == null){
+            pieceList.add(new Blocks(random.nextInt(number_of_Pieces) + 1));
+            pieceList.add(new Blocks(random.nextInt(number_of_Pieces) + 1));
+            arrayTetris = new ArrayTetris();
+        }
+        return arrayTetris;
     }
 
     /*

@@ -32,6 +32,10 @@ public class NextBlockView extends View {
         pieceList = gameBoard.getPieceList();
     }
 
+//    public synchronized static NextBlockView getNextBlockView(){
+//
+//    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

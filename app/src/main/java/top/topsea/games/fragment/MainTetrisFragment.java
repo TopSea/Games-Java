@@ -33,8 +33,9 @@ public class MainTetrisFragment extends Fragment implements GestureDetector.OnGe
 
     private Button regame, save;
     private TextView bestScore, nowScore;
-    private BlockList blockList;
     private GestureDetectorCompat mDetector;
+    private ArrayTetris arrayTetris;
+    private static ArrayList<Blocks> blockList = new ArrayList<Blocks>();
 
     public MainTetrisFragment() {
         // Required empty public constructor
@@ -57,7 +58,8 @@ public class MainTetrisFragment extends Fragment implements GestureDetector.OnGe
         bestScore = getView().findViewById(R.id.tetris_best);
         nowScore = getView().findViewById(R.id.tetris_now);
 
-        blockList = BlockList.getBlockInstance();
+        blockList = arrayTetris.getPieceList();
+        arrayTetris = ArrayTetris.getArrayTetris();
 
         mDetector = new GestureDetectorCompat(getActivity(), this);
 
@@ -108,17 +110,17 @@ public class MainTetrisFragment extends Fragment implements GestureDetector.OnGe
         if (Math.abs(moveX) > Math.abs(moveY)) {
             if (moveX < 0) {
                 //向右
-                ArrayTetris.moveRight(blockList.getCurrentBlock());
+                arrayTetris.moveRight(arrayTetris.getCurrentPiece());
             } else {
                 //向左
-                ArrayTetris.moveLeft(blockList.getCurrentBlock());
+                arrayTetris.moveLeft(arrayTetris.getCurrentPiece());
             }
         } else {
             if (moveY < 0) {
                 //向下
             } else {
                 //向上
-                ArrayTetris.rotateBlock(blockList.getCurrentBlock());
+                arrayTetris.rotatePiece(arrayTetris.getCurrentPiece());
             }
         }
         return true;

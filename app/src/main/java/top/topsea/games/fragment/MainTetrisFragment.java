@@ -58,8 +58,8 @@ public class MainTetrisFragment extends Fragment implements GestureDetector.OnGe
         bestScore = getView().findViewById(R.id.tetris_best);
         nowScore = getView().findViewById(R.id.tetris_now);
 
-        blockList = arrayTetris.getPieceList();
         arrayTetris = ArrayTetris.getArrayTetris();
+        blockList = arrayTetris.getPieceList();
 
         mDetector = new GestureDetectorCompat(getActivity(), this);
 

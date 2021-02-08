@@ -9,6 +9,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 
 import top.topsea.games.R;
@@ -26,9 +28,27 @@ public class NextBlockView extends View {
     private final Bitmap lPiece = BitmapFactory.decodeResource(getResources(), R.drawable.lpiece);
     private final Bitmap iPiece = BitmapFactory.decodeResource(getResources(), R.drawable.ipiece);
 
-    public NextBlockView(Context context, ArrayTetris gameBoard) {
+    public NextBlockView(Context context) {
         super(context);
-        this.gameBoard = gameBoard;
+        this.gameBoard = ArrayTetris.getArrayTetris();
+        pieceList = gameBoard.getPieceList();
+    }
+
+    public NextBlockView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        this.gameBoard = ArrayTetris.getArrayTetris();
+        pieceList = gameBoard.getPieceList();
+    }
+
+    public NextBlockView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.gameBoard = ArrayTetris.getArrayTetris();
+        pieceList = gameBoard.getPieceList();
+    }
+
+    public NextBlockView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        this.gameBoard = ArrayTetris.getArrayTetris();
         pieceList = gameBoard.getPieceList();
     }
 

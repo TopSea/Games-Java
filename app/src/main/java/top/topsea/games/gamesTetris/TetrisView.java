@@ -47,7 +47,7 @@ public class TetrisView extends View {
         super(context);
         this.mainActivity = (MainActivity) context;
         this.gameBoard = ArrayTetris.getArrayTetris();
-        this.nextPieceView = new NextBlockView(context, gameBoard);
+        this.nextPieceView = new NextBlockView(context);
         pieceList = gameBoard.getPieceList();
         points = new Points(context);
         gameLoop();
@@ -57,7 +57,7 @@ public class TetrisView extends View {
         super(context, attrs);
         this.mainActivity = (MainActivity) context;
         this.gameBoard = ArrayTetris.getArrayTetris();
-        this.nextPieceView = new NextBlockView(context, gameBoard);
+        this.nextPieceView = new NextBlockView(context);
         pieceList = gameBoard.getPieceList();
         points = new Points(context);
         gameLoop();
@@ -67,7 +67,7 @@ public class TetrisView extends View {
         super(context, attrs, defStyleAttr);
         this.mainActivity = (MainActivity) context;
         this.gameBoard = ArrayTetris.getArrayTetris();
-        this.nextPieceView = new NextBlockView(context, gameBoard);
+        this.nextPieceView = new NextBlockView(context);
         pieceList = gameBoard.getPieceList();
         points = new Points(context);
         gameLoop();
@@ -77,7 +77,7 @@ public class TetrisView extends View {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.mainActivity = (MainActivity) context;
         this.gameBoard = ArrayTetris.getArrayTetris();
-        this.nextPieceView = new NextBlockView(context, gameBoard);
+        this.nextPieceView = new NextBlockView(context);
         pieceList = gameBoard.getPieceList();
         points = new Points(context);
         gameLoop();
@@ -111,8 +111,8 @@ public class TetrisView extends View {
                                     int p = points.getCurrentPoints();
                                     points.setLevel();
 
-                                    currentPunkteTextView.setText("Points:" + " " + p);
-                                    currentLevelTextView.setText("Level" + " " + points.getLevel());
+//                                    currentPunkteTextView.setText("Points:" + " " + p);
+//                                    currentLevelTextView.setText("Level" + " " + points.getLevel());
 
                                     if (points.getLevel() > points.loadHighscore()) {
                                         points.writeHighscore();

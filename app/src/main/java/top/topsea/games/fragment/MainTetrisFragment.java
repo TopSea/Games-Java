@@ -32,10 +32,15 @@ import top.topsea.games.utils.FileOperation;
 public class MainTetrisFragment extends Fragment implements GestureDetector.OnGestureListener {
 
     private Button regame, save;
-    private TextView bestScore, nowScore;
+    private static TextView scoreT;
+    private TextView bestScoreT;
     private GestureDetectorCompat mDetector;
     private ArrayTetris arrayTetris;
     private static ArrayList<Blocks> blockList = new ArrayList<Blocks>();
+
+    private static int score = 0;
+    private static int bestScore = 0;
+
 
     public MainTetrisFragment() {
         // Required empty public constructor
@@ -55,8 +60,8 @@ public class MainTetrisFragment extends Fragment implements GestureDetector.OnGe
 
         });
 
-        bestScore = getView().findViewById(R.id.tetris_best);
-        nowScore = getView().findViewById(R.id.tetris_now);
+        bestScoreT = getView().findViewById(R.id.tetris_best);
+        scoreT = getView().findViewById(R.id.tetris_now);
 
         arrayTetris = ArrayTetris.getArrayTetris();
         blockList = arrayTetris.getPieceList();
@@ -73,6 +78,12 @@ public class MainTetrisFragment extends Fragment implements GestureDetector.OnGe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_tetris, container, false);
+    }
+
+    @SuppressLint("SetTextI18n")
+    public static void setScore(){
+        score += 50;
+        scoreT.setText("Score ：" + score);
     }
 
 
@@ -118,6 +129,7 @@ public class MainTetrisFragment extends Fragment implements GestureDetector.OnGe
         } else {
             if (moveY < 0) {
                 //向下
+                arrayTetris.fastDrop(arrayTetris.getCurrentPiece());
             } else {
                 //向上
                 arrayTetris.rotatePiece(arrayTetris.getCurrentPiece());

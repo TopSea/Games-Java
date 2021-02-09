@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class ArrayTetris {
 
-    private final int boardHeight = 30;
+    private final int boardHeight = 25;
     private final int boardWidth = 16;
     private int gameBoard[][] = new int[boardHeight][boardWidth];
     private static final Random random = new Random();

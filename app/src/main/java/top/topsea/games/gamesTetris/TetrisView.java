@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.view.View;
@@ -19,6 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import top.topsea.games.MainActivity;
+import top.topsea.games.fragment.MainTetrisFragment;
 
 
 public class TetrisView extends View {
@@ -26,25 +29,24 @@ public class TetrisView extends View {
     private MediaPlayer mediaPlayer;
     private ArrayTetris gameBoard;
     private MainActivity mainActivity;
-    private ImageButton rotateButton;
-    private ImageButton rightButton;
-    private ImageButton downButton;
-    private ImageButton leftButton;
+
     private Timer timer = new Timer();
     private Random random = new Random();
     private ArrayList<Blocks> pieceList;
     private NextBlockView nextPieceView;
-    private TextView currentLevelTextView;
-    private TextView highscoreLevelTextView;
-    private TextView currentPunkteTextView;
+
     private Points points;
     private final int score = 10;
     private int timerPeriod = 250;
     private int level = 0;
     private boolean pause;
+    private int blockSize;
+    private Paint paint;
 
     public TetrisView(Context context) {
         super(context);
+        blockSize = dp2Px();
+        paint = new Paint();
         this.mainActivity = (MainActivity) context;
         this.gameBoard = ArrayTetris.getArrayTetris();
         this.nextPieceView = new NextBlockView(context);
@@ -55,6 +57,8 @@ public class TetrisView extends View {
 
     public TetrisView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        blockSize = dp2Px();
+        paint = new Paint();
         this.mainActivity = (MainActivity) context;
         this.gameBoard = ArrayTetris.getArrayTetris();
         this.nextPieceView = new NextBlockView(context);
@@ -65,6 +69,8 @@ public class TetrisView extends View {
 
     public TetrisView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        blockSize = dp2Px();
+        paint = new Paint();
         this.mainActivity = (MainActivity) context;
         this.gameBoard = ArrayTetris.getArrayTetris();
         this.nextPieceView = new NextBlockView(context);
@@ -75,6 +81,8 @@ public class TetrisView extends View {
 
     public TetrisView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        blockSize = dp2Px();
+        paint = new Paint();
         this.mainActivity = (MainActivity) context;
         this.gameBoard = ArrayTetris.getArrayTetris();
         this.nextPieceView = new NextBlockView(context);
@@ -110,13 +118,14 @@ public class TetrisView extends View {
                                     points.setCurrentPoints(points.getCurrentPoints() + deletedRows * score);
                                     int p = points.getCurrentPoints();
                                     points.setLevel();
+                                    MainTetrisFragment.setScore();
 
 //                                    currentPunkteTextView.setText("Points:" + " " + p);
 //                                    currentLevelTextView.setText("Level" + " " + points.getLevel());
 
                                     if (points.getLevel() > points.loadHighscore()) {
                                         points.writeHighscore();
-                                        highscoreLevelTextView.setText("Highscore:" + " " + points.getLevel());
+//                                        highscoreLevelTextView.setText("Highscore:" + " " + points.getLevel());
                                     }
                                 }
 
@@ -143,7 +152,7 @@ public class TetrisView extends View {
             pieceList.clear();
             gameBoard.clearGameBoard();
 //            mainActivity.setPause(true);
-            mediaPlayer.stop();
+//            mediaPlayer.stop();
 //            showGameOverScreen();
             return true;
         }
@@ -169,19 +178,24 @@ public class TetrisView extends View {
     /*
     change colorCode to spezific Color and paint on GAmeboard
      */
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
-
+        RectF rel;
         super.onDraw(canvas);
-        Paint p = new Paint();
-
-        for (int x = 0; x < gameBoard.getBoardHeight(); x++) {
-            for (int y = 0; y < gameBoard.getBoardWidth(); y++) {
+        paint.setColor(Color.BLUE);
+        for (int x = 0; x < 25; x ++) {
+            for (int y = 0; y < 16; y ++) {
                 int color = gameBoard.codeToColor(x, y);
-                p.setColor(color);
-                canvas.drawRect(y * 30, x * 30, y * 30 + 30, x * 30 + 30, p);
+                paint.setColor(color);
+                rel = new RectF(y * blockSize, x * blockSize, y * blockSize + blockSize, x * blockSize + blockSize);
+                canvas.drawRoundRect(rel, 8, 8, paint);
             }
         }
+    }
+
+    private int dp2Px(){
+        return (int)(getContext().getResources().getDisplayMetrics().density * 20);
     }
 
     /*

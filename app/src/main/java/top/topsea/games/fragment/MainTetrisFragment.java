@@ -57,7 +57,7 @@ public class MainTetrisFragment extends Fragment implements GestureDetector.OnGe
 
         save = getView().findViewById(R.id.button_tetris_save);
         save.setOnClickListener(v -> {
-
+            save.setText(R.string.button_continue);
         });
 
         bestScoreT = getView().findViewById(R.id.tetris_best);

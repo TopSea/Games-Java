@@ -12,6 +12,8 @@
 
     <string name="button_regame">重新开始</string>
     <string name="button_save">保存数据</string>
+    <string name="button_pause">暂停游戏</string>
+    <string name="button_continue">继续游戏</string>
 
     <string name="next_tetris_block">下一个：</string>
     <string name="string_road_best">最佳纪录：</string>

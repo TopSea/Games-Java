@@ -107,7 +107,6 @@ public class Main2048Fragment extends Fragment implements GestureDetector.OnGest
         }
         yourScore = getView().findViewById(R.id.now_score_road);
         best = getView().findViewById(R.id.best_2048);
-        best.setText("最佳纪录：" + bestScore);
         best.setOnLongClickListener(v -> {
             Print2048(Cheating());
             yourScore.setText("Score: " + Array2048.getScore(Cheating()));
@@ -122,10 +121,10 @@ public class Main2048Fragment extends Fragment implements GestureDetector.OnGest
 
         Button save = getView().findViewById(R.id.button_save_2048);
         save.setOnClickListener(v -> {
-            FileOperation.saveArray(context, array2048, fileName);
-            scoreD.setBestRecord(Math.max(score, bestScore));
+            bestScore = Math.max(score, bestScore);
+            scoreD.setBestRecord(bestScore);
             scoreDao.updateScore(scoreD);
-//            FileOperation.SaveBest(context, Math.max(score, bestScore) + "", 1);
+            FileOperation.saveArray(context, array2048, fileName);
             toastSave.show();
             NavController navController = Navigation.findNavController(getView());
             navController.navigateUp();
@@ -133,6 +132,9 @@ public class Main2048Fragment extends Fragment implements GestureDetector.OnGest
 
         Button reGame = getView().findViewById(R.id.button_regame_2048);
         reGame.setOnClickListener(v -> {
+            bestScore = Math.max(score, bestScore);
+            scoreD.setBestRecord(bestScore);
+            scoreDao.updateScore(scoreD);
             score = 0;
             array2048 = Array2048.InitializeArray(width, length);
             FileOperation.saveArray(context, array2048, fileName);
@@ -156,7 +158,8 @@ public class Main2048Fragment extends Fragment implements GestureDetector.OnGest
     public void onStop() {
         super.onStop();
         FileOperation.saveArray(context, array2048, fileName);
-        scoreD.setBestRecord(Math.max(score, bestScore));
+        bestScore = Math.max(score, bestScore);
+        scoreD.setBestRecord(bestScore);
         scoreDao.updateScore(scoreD);
 //        FileOperation.SaveBest(context, Math.max(score, bestScore) + "", 1);
         toastSave.show();
@@ -166,8 +169,6 @@ public class Main2048Fragment extends Fragment implements GestureDetector.OnGest
     public void onResume() {
         super.onResume();
     }
-
-
 
     @SuppressLint("SetTextI18n")
     private void Print2048(int[][] array) {
@@ -194,6 +195,7 @@ public class Main2048Fragment extends Fragment implements GestureDetector.OnGest
             }
         }
         yourScore.setText("Score: " + score);
+        best.setText("最佳纪录：" + bestScore);
     }
 
     @Override

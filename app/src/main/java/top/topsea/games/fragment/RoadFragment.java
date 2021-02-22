@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import top.topsea.games.R;
 import top.topsea.games.database.GamesDatabase;
@@ -27,6 +28,8 @@ import top.topsea.games.database.ScoreDao;
 import top.topsea.games.gameRoad.ActionRoad;
 import top.topsea.games.gameRoad.ArrayRoad;
 import top.topsea.games.utils.FileOperation;
+
+import static top.topsea.games.utils.DateOperation.String2LongDate;
 
 
 public class RoadFragment extends Fragment {
@@ -86,12 +89,12 @@ public class RoadFragment extends Fragment {
                 arrayRoad = FileOperation.StringToArray(FileOperation.readArray(getContext(), fileName));
                 best = scoreD.getBestRecord();
                 score = scoreD.getGameRecord();
-                chronometerScore.setBase(score);
-                chronometerBest.setBase(best);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        chronometerScore.setBase(score);
+        chronometerBest.setBase(best);
 
         chronometerScore.start();
 
@@ -113,15 +116,17 @@ public class RoadFragment extends Fragment {
 
         Button save = getView().findViewById(R.id.button_save_road);
         save.setOnClickListener(v -> {
-            FileOperation.saveArray(getContext(), arrayRoad, fileName);
-            long score = chronometerScore.getBase();
-            long best = chronometerBest.getBase();
-            scoreD.setGameRecord(score);
-            scoreD.setBestRecord(Math.max(score, best));
-            scoreDao.updateScore(scoreD);
-//            FileOperation.SaveBest(getContext(), Math.min(score, best) + "", 2);
-            Toast toast = Toast.makeText(getContext(), "保存成功！", Toast.LENGTH_SHORT);
-            toast.show();
+//            FileOperation.saveArray(getContext(), arrayRoad, fileName);
+//            long score = chronometerScore.getBase();
+//            long best = chronometerBest.getBase();
+//            scoreD.setGameRecord(score);
+//            scoreD.setBestRecord(Math.max(score, best));
+//            scoreDao.updateScore(scoreD);
+//
+//            Toast toast = Toast.makeText(getContext(), "保存成功！", Toast.LENGTH_SHORT);
+//            toast.show();
+            save.setText(R.string.button_continue);
+            chronometerScore.stop();
         });
 
         Button reGame = getView().findViewById(R.id.button_regame_road);
@@ -162,6 +167,12 @@ public class RoadFragment extends Fragment {
 
     @Override
     public void onResume() {
+
+        try {
+            chronometerScore.setBase(String2LongDate(chronometerScore.getText().toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         chronometerScore.start();
         super.onResume();
     }

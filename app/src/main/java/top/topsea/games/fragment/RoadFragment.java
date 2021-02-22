@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import top.topsea.games.gameRoad.ActionRoad;
 import top.topsea.games.gameRoad.ArrayRoad;
 import top.topsea.games.utils.FileOperation;
 
+import static top.topsea.games.utils.DateOperation.String2Long;
 import static top.topsea.games.utils.DateOperation.String2LongDate;
 
 
@@ -43,6 +45,9 @@ public class RoadFragment extends Fragment {
     private Chronometer chronometerScore, chronometerBest;
     private long score;
     private long best;
+
+    private boolean isPause = false;
+    private String pauseTime = "";
 
     //database
     private GamesDatabase database;
@@ -73,11 +78,11 @@ public class RoadFragment extends Fragment {
         chronometerScore = getView().findViewById(R.id.now_score_road);
         chronometerBest = getView().findViewById(R.id.best_road);
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             textViewID = FileOperation.StringToArray(savedInstanceState.get("roadID").toString());
             arrayRoad = FileOperation.StringToArray(savedInstanceState.get("roadState").toString());
             score = Long.parseLong(savedInstanceState.get("SCORE").toString());
-        }else {
+        } else {
             textViewID = new int[][]{
                     {R.id.road1, R.id.road2, R.id.road3, R.id.road4},
                     {R.id.road5, R.id.road6, R.id.road7, R.id.road8},
@@ -107,7 +112,13 @@ public class RoadFragment extends Fragment {
                     arrayRoad = ActionRoad.DetermineDirection(arrayRoad, finalI, finalJ);
                     PrintRoad();
                     if (ArrayRoad.isDone(arrayRoad)) {
-                        Toast toast = Toast.makeText(getContext(), "游戏结束，用时: " + chronometerScore.toString(), Toast.LENGTH_LONG);
+                        chronometerScore.stop();
+                        long score = String2Long(chronometerScore.getText().toString());
+                        long best = Math.max(String2Long(chronometerBest.getText().toString()), score);
+                        scoreD.setBestRecord(best);
+                        chronometerBest.setBase(best);
+                        scoreDao.updateScore(scoreD);
+                        Toast toast = Toast.makeText(getContext(), "游戏结束，用时: " + chronometerScore.getText(), Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 });
@@ -116,17 +127,17 @@ public class RoadFragment extends Fragment {
 
         Button save = getView().findViewById(R.id.button_save_road);
         save.setOnClickListener(v -> {
-//            FileOperation.saveArray(getContext(), arrayRoad, fileName);
-//            long score = chronometerScore.getBase();
-//            long best = chronometerBest.getBase();
-//            scoreD.setGameRecord(score);
-//            scoreD.setBestRecord(Math.max(score, best));
-//            scoreDao.updateScore(scoreD);
-//
-//            Toast toast = Toast.makeText(getContext(), "保存成功！", Toast.LENGTH_SHORT);
-//            toast.show();
-            save.setText(R.string.button_continue);
-            chronometerScore.stop();
+            if (isPause) {
+                chronometerScore.setBase(String2Long(pauseTime));
+                chronometerScore.start();
+                save.setText(R.string.button_pause);
+                isPause = false;
+            } else {
+                pauseTime = chronometerScore.getText().toString();
+                save.setText(R.string.button_continue);
+                chronometerScore.stop();
+                isPause = true;
+            }
         });
 
         Button reGame = getView().findViewById(R.id.button_regame_road);
@@ -153,13 +164,12 @@ public class RoadFragment extends Fragment {
     @Override
     public void onStop() {
         FileOperation.saveArray(getContext(), arrayRoad, fileName);
-        long score = chronometerScore.getBase();
-        long best = chronometerBest.getBase();
+        long score = String2Long(chronometerScore.getText().toString());
         scoreD.setGameRecord(score);
-        scoreD.setBestRecord(Math.max(score, best));
         scoreDao.updateScore(scoreD);
+        pauseTime = chronometerScore.getText().toString();
         chronometerScore.stop();
-//        FileOperation.SaveBest(getContext(), Math.min(score, best) + "", 2);
+
         Toast toast = Toast.makeText(getContext(), "保存成功！", Toast.LENGTH_SHORT);
         toast.show();
         super.onStop();
@@ -168,11 +178,7 @@ public class RoadFragment extends Fragment {
     @Override
     public void onResume() {
 
-        try {
-            chronometerScore.setBase(String2LongDate(chronometerScore.getText().toString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        chronometerScore.setBase(String2Long(pauseTime));
         chronometerScore.start();
         super.onResume();
     }
@@ -182,10 +188,10 @@ public class RoadFragment extends Fragment {
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (arrayRoad[i][j] == 0){
+                if (arrayRoad[i][j] == 0) {
                     texts[i][j].setText("");
                     texts[i][j].setBackgroundColor(Color.WHITE);
-                }else{
+                } else {
                     texts[i][j].setText(arrayRoad[i][j] + "");
                     texts[i][j].setBackgroundColor(Color.LTGRAY);
                 }
